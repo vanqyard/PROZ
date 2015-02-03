@@ -1,19 +1,29 @@
 package view;
 
+import events.ProgramEvent;
+import events.SendEvent;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Date;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by vanqyard on 2/3/15.
  */
 public class ConversationScreen extends JPanel {
+    private final BlockingQueue<ProgramEvent> blockingQueue;
     private JPanel mineTextScrollPanel = new JPanel(new BorderLayout());
     private JPanel peerTextScrollPanel = new JPanel(new BorderLayout());
     private JButton sendButton = new JButton("Send");
-    public ConversationScreen() {
+    private String peerName = new String();
+
+    public ConversationScreen(BlockingQueue<ProgramEvent> blockingQueue, String peerName) {
+        this.blockingQueue = blockingQueue;
         setLayout(new BorderLayout());
+        this.peerName = peerName;
 
         /* "=== textScrollPanel ===" */
         JTextArea mineTextArea = new JTextArea();
@@ -41,8 +51,15 @@ public class ConversationScreen extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 String text = mineTextArea.getText();
-                peerTextArea.append(text);
+
+                peerTextArea.append("\n" + new Date() + " from " + peerName.toUpperCase() + ": \n" + text + "\n");
                 mineTextArea.setText("");
+
+                try {
+                    blockingQueue.put(new SendEvent(text));
+                } catch ( InterruptedException ex) {
+                    throw new RuntimeException();
+                }
             }
         });
     }

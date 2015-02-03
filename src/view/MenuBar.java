@@ -1,6 +1,6 @@
 package view;
 
-import controller.ProgramEvent;
+import events.ProgramEvent;
 
 import javax.swing.*;
 import java.util.concurrent.BlockingQueue;

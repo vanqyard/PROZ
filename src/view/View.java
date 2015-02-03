@@ -3,15 +3,13 @@ package view;
 /**
  * Created by vanqyard on 2/2/15.
  */
-import controller.ProgramEvent;
+import events.ProgramEvent;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.MouseListener;
-import java.util.Vector;
+import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.awt.event.*;
 
@@ -20,6 +18,11 @@ public class View extends AbstractView {
     private JFrame frame = new JFrame();
     private JList list;
     private JPanel listScrollPanel = new JPanel(new BorderLayout());
+
+    private HashMap<Integer, String> contactsHashMap
+            = new HashMap<Integer, String>();
+    private HashMap<String, ConversationScreen> tabsHashMap
+            = new HashMap<String, ConversationScreen>();
 
     public View(final BlockingQueue<ProgramEvent> blockingQueue) {
         frame.setVisible(true);
@@ -55,7 +58,7 @@ public class View extends AbstractView {
                     JList source = (JList)event.getSource();
                     String selected = source.getSelectedValue().toString();
 
-                    ConversationScreen conversationSplitPane = new ConversationScreen();
+                    ConversationScreen conversationSplitPane = new ConversationScreen(blockingQueue, selected);
                     tabbedPane.addTab(selected, conversationSplitPane);
                 }
             }
@@ -73,5 +76,9 @@ public class View extends AbstractView {
                 listScrollPanel, tabbedPane);
 
         frame.add(mainSplitPane);
+    }
+
+    public void printMessage(String message) {
+
     }
 }
