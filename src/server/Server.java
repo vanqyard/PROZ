@@ -16,8 +16,10 @@ public class Server {
             while (true) {
                 try (Socket connection = server.accept()) {
                     Writer out = new OutputStreamWriter(connection.getOutputStream());
+
                     Date now = new Date();
                     out.write(now.toString() +"\r\n");
+
                     out.flush();
                     connection.close();
                 } catch (IOException ex) {}

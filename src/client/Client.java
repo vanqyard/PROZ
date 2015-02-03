@@ -3,16 +3,21 @@ package client;
 /**
  * Created by vanqyard on 2/2/15.
  */
-import com.sun.corba.se.pept.encoding.InputObject;
+import controller.ProgramEvent;
 
 import java.net.*;
 import java.io.*;
+import java.util.concurrent.BlockingQueue;
 
 public class Client {
     int port = 2000;
     String ipNumber = "127.0.0.1";
 
-    public Client() {
+    private final BlockingQueue<ProgramEvent> blockingQueue;
+
+    public Client(final BlockingQueue<ProgramEvent> blockingQueue) {
+        this.blockingQueue = blockingQueue;
+
         try( Socket socket = new Socket(ipNumber, port) ) {
             InputStream in = socket.getInputStream();
             StringBuilder time = new StringBuilder();
